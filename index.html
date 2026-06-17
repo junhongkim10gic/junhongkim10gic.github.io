@@ -1,0 +1,346 @@
+<!--
+  ┌─────────────────────────────────────────────────────────────┐
+  │  나의 학술 홈페이지 (베이지 톤 · 탭 전환형)                    │
+  │  수정 방법: 아래 "여기를 수정하세요" 표시가 있는 부분의         │
+  │  글자만 바꾸면 됩니다. 색·글꼴은 <style> 안에서 바꿀 수 있어요. │
+  └─────────────────────────────────────────────────────────────┘
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- ▼ 여기를 수정하세요: 브라우저 탭에 뜨는 제목 -->
+<title>홍길동 — Hong Gildong</title>
+
+<meta name="description" content="홍길동의 개인 홈페이지" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --bg:      #F4F0E6;   /* 배경 (부드러운 베이지) */
+    --paper:   #FBF9F3;   /* 살짝 밝은 종이색 (강조 칸) */
+    --ink:     #211F1A;   /* 본문 글자 */
+    --muted:   #757061;   /* 흐린 글자 (날짜·주석) */
+    --line:    #DED7C6;   /* 가는 구분선 (따뜻한 회색) */
+    --accent:  #2E4A77;   /* 링크·강조 (차분한 학술 블루) */
+    --serif:   "Newsreader", Georgia, "Noto Serif KR", serif;
+    --sans:    "Inter", -apple-system, "Apple SD Gothic Neo", "Pretendard", sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    transition: border-color .2s ease, color .2s ease;
+  }
+  a:hover { border-bottom-color: var(--accent); }
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* ── 전체 틀 ───────────────────────────────────────────── */
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 6rem) clamp(1.5rem, 5vw, 4rem);
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  /* ── 왼쪽 고정 명함 ─────────────────────────────────────── */
+  .rail { position: sticky; top: clamp(2.5rem, 6vw, 6rem); }
+
+  .rail .name {
+    font-size: 1.9rem;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0 0 .15rem;
+  }
+  .rail .name .latin {
+    display: block;
+    font-style: italic;
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: var(--muted);
+    margin-top: .35rem;
+  }
+
+  .rail .role {
+    font-family: var(--sans);
+    font-size: .8rem;
+    line-height: 1.5;
+    color: var(--muted);
+    margin: 1.1rem 0 1.6rem;
+  }
+
+  /* ── 메뉴 (탭) ─────────────────────────────────────────── */
+  nav { display: flex; flex-direction: column; gap: .55rem; }
+  nav a {
+    font-family: var(--sans);
+    font-size: .72rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    border-bottom: none;
+    width: fit-content;
+    cursor: pointer;
+  }
+  nav a::before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 1px;
+    background: var(--line);
+    vertical-align: middle;
+    margin-right: .6rem;
+    transition: width .25s ease, background .25s ease;
+  }
+  nav a:hover { color: var(--accent); }
+  nav a:hover::before { width: 26px; background: var(--accent); }
+  /* 현재 보고 있는 메뉴 표시 */
+  nav a.is-active { color: var(--accent); }
+  nav a.is-active::before { width: 34px; background: var(--accent); }
+
+  .rail .contact {
+    margin-top: 1.8rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--sans);
+    font-size: .78rem;
+    line-height: 1.9;
+    color: var(--muted);
+  }
+  .rail .contact a { border-bottom: none; }
+  .rail .contact a:hover { border-bottom: 1px solid var(--accent); }
+
+  /* ── 오른쪽 본문 ───────────────────────────────────────── */
+  .content { max-width: 60ch; min-height: 60vh; }
+
+  /* JS가 켜지면 한 번에 한 화면만 보이게 */
+  .js .section { display: none; }
+  .js .section.is-active { display: block; }
+  .section.is-active { animation: rise .55s ease both; }
+
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: .7rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 1.1rem;
+  }
+
+  .lede {
+    font-size: 1.5rem;
+    line-height: 1.5;
+    font-weight: 400;
+    margin: 0 0 1.2rem;
+    letter-spacing: -0.01em;
+  }
+  .lede em { font-style: italic; color: var(--accent); }
+
+  p { margin: 0 0 1.1rem; }
+  .content h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0 0 1.1rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── 프로젝트/연구 목록 (여백 주석 스타일) ──────────────── */
+  .entry {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 1.25rem;
+    padding: 1.3rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .entry:last-child { border-bottom: 1px solid var(--line); }
+  .entry .year {
+    font-family: var(--sans);
+    font-size: .75rem;
+    color: var(--muted);
+    padding-top: .3rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .entry .title { font-size: 1.15rem; font-weight: 500; margin: 0 0 .2rem; }
+  .entry .desc { font-size: 1rem; color: var(--muted); margin: 0; line-height: 1.6; }
+  .entry .desc .note { font-style: italic; }
+
+  .cv-note {
+    margin-top: 1.4rem;
+    padding: 1.1rem 1.3rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    color: var(--muted);
+    font-size: .95rem;
+  }
+
+  /* 첫 화면 부드럽게 등장 */
+  .rail.fade { animation: rise .8s ease both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+  /* ── 모바일 ────────────────────────────────────────────── */
+  @media (max-width: 760px) {
+    body { font-size: 17px; }
+    .page { grid-template-columns: 1fr; gap: 2.2rem; }
+    .rail { position: static; }
+    nav { flex-flow: row wrap; gap: 1rem 1.4rem; }
+    nav a::before { display: none; }
+    nav a.is-active { border-bottom: 1px solid var(--accent); }
+    .content { max-width: none; min-height: 0; }
+    .entry { grid-template-columns: 52px 1fr; gap: 1rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .section.is-active, .rail.fade { animation: none; }
+  }
+</style>
+</head>
+
+<body>
+  <main class="page">
+
+    <!-- ════════ 왼쪽: 이름 · 메뉴 · 연락처 ════════ -->
+    <aside class="rail fade">
+      <h1 class="name">
+        홍길동                                   <!-- ▼ 여기를 수정하세요: 이름 -->
+        <span class="latin">Hong Gildong</span>  <!-- ▼ 영문 이름 (없으면 이 줄 삭제) -->
+      </h1>
+
+      <!-- ▼ 여기를 수정하세요: 소속·전공 -->
+      <p class="role">○○대학교 컴퓨터공학과<br />학부 4학년 · 인공지능 연구</p>
+
+      <nav>
+        <a href="#about" data-target="about">About</a>
+        <a href="#work" data-target="work">Work</a>
+        <a href="#cv" data-target="cv">CV &amp; Contact</a>
+      </nav>
+
+      <!-- ▼ 여기를 수정하세요: 이메일·링크 (필요 없는 줄은 지우세요) -->
+      <div class="contact">
+        <a href="mailto:hong@example.com">hong@example.com</a><br />
+        <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a> ·
+        <a href="https://scholar.google.com/" target="_blank" rel="noopener">Scholar</a>
+      </div>
+    </aside>
+
+    <!-- ════════ 오른쪽: 본문 (한 번에 한 화면) ════════ -->
+    <div class="content">
+
+      <!-- ─── 자기소개 ─── -->
+      <section id="about" class="section">
+        <p class="eyebrow">About</p>
+        <!-- ▼ 여기를 수정하세요: 한 문장 소개 -->
+        <p class="lede">사람과 기계가 함께 더 나은 판단을 내리는 방법을 <em>연구하는</em> 학생입니다.</p>
+        <!-- ▼ 여기를 수정하세요: 두세 문장 더 -->
+        <p>○○대학교에서 컴퓨터공학을 공부하며, 머신러닝의 해석 가능성과 인간-AI 협업에 관심이 많습니다. 복잡한 아이디어를 단순하고 정직한 형태로 풀어내는 일을 좋아합니다.</p>
+        <p>현재는 학부 연구생으로 △△ 연구실에 참여하고 있으며, 틈틈이 작은 도구를 만들고 글을 씁니다.</p>
+      </section>
+
+      <!-- ─── 프로젝트 / 연구 ─── -->
+      <section id="work" class="section">
+        <p class="eyebrow">Selected Work</p>
+
+        <!-- ▼ 항목 복사·수정해서 늘리거나 줄이세요 (year / title / desc) -->
+        <div class="entry">
+          <span class="year">2025</span>
+          <div>
+            <p class="title">해석 가능한 추천 모델</p>
+            <p class="desc">사용자가 추천 이유를 이해할 수 있도록 설계한 모델. <span class="note">학부 연구 프로젝트.</span></p>
+          </div>
+        </div>
+
+        <div class="entry">
+          <span class="year">2024</span>
+          <div>
+            <p class="title">강의 노트 정리 도구</p>
+            <p class="desc">손으로 쓴 필기를 자동으로 구조화하는 웹 앱. <span class="note">개인 프로젝트 · 오픈소스.</span></p>
+          </div>
+        </div>
+
+        <div class="entry">
+          <span class="year">2024</span>
+          <div>
+            <p class="title">데이터 시각화 실험</p>
+            <p class="desc">공공 데이터를 활용한 인터랙티브 시각화 모음. <span class="note">교내 발표.</span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── 이력 · 연락처 ─── -->
+      <section id="cv" class="section">
+        <p class="eyebrow">CV &amp; Contact</p>
+        <h2>이력서 &amp; 연락</h2>
+        <!-- ▼ 여기를 수정하세요: CV 파일 링크나 연락 안내 -->
+        <p>전체 이력서는 <a href="cv.pdf" target="_blank" rel="noopener">PDF</a>에서 볼 수 있습니다. 연구·협업·질문은 언제든 <a href="mailto:hong@example.com">이메일</a>로 편하게 연락 주세요.</p>
+        <div class="cv-note">교육 · 경력 · 수상 내역을 줄마다 추가하고 싶으면 알려주세요. 표나 타임라인 형태로도 만들어 드릴게요.</div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    // JS가 켜져 있으면 한 번에 한 화면만 보여줍니다.
+    document.documentElement.classList.add('js');
+
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav a[data-target]'));
+    var sections = Array.prototype.slice.call(document.querySelectorAll('.section'));
+
+    function show(id) {
+      var found = false;
+      sections.forEach(function (s) {
+        var active = s.id === id;
+        s.classList.toggle('is-active', active);
+        if (active) found = true;
+      });
+      links.forEach(function (a) {
+        a.classList.toggle('is-active', a.getAttribute('data-target') === id);
+      });
+      if (found) {
+        // 전환할 때 맨 위로 (모바일에서 보기 편하게)
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      }
+      return found;
+    }
+
+    links.forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var id = a.getAttribute('data-target');
+        show(id);
+        history.replaceState(null, '', '#' + id);
+      });
+    });
+
+    // 주소창의 #해시로 들어오면 그 화면부터, 없으면 About부터
+    var start = (location.hash || '').replace('#', '');
+    if (!show(start)) { show('about'); }
+  </script>
+</body>
+</html>
